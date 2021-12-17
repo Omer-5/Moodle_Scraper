@@ -6,10 +6,10 @@
 
 [ ] folder: folder
 
-[ ] resource : word,pdf,excel.... \**asm
+[ ] resource : word,pdf,excel.... \*\*asm
 make sure to check if the file actually download (supported files)
 
-[ ] quiz : *ignore
+[ ] quiz : \*ignore
 
 [ ] ass : assignment \*ignore
 
@@ -17,14 +17,15 @@ make sure to check if the file actually download (supported files)
 
 [ ] extract folder names
 
-
 [ ] keep current location
-
 
 [ ] save file to the proper location - if the file already exist it duplicate it with (number)
 
-
 [ ] file compare? check if there are changes if the file
+
+[ ] nickname a folder - save a folder in a different name
+
+[ ] semester grouping
 
 ### Download mechanism:
 
@@ -34,7 +35,6 @@ make sure to check if the file actually download (supported files)
 
 [x] download excel
 
-
 ### Misc
 
 [ ] implement better way to save login info
@@ -43,5 +43,6 @@ make sure to check if the file actually download (supported files)
 
 ### OneDrive integration
 
-### Dockerize the project
+### Telegram bot
 
+### Dockerize the project
