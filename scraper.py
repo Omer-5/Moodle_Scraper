@@ -6,13 +6,16 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
+import config as c
 from secrets import USERNAME, PASSWORD
 
 
 class Browser:
-    """initialize the browser basic config options to downlaod
+    """Browser object that handles all the necessary functions
     """
     def __init__(self) -> None:
+        """initialize the browser basic config options to download
+        """
         my_firefox_options = FirefoxOptions()
         my_firefox_options.set_preference("browser.download.folderList", 1);
         # Network -> Content-Type
@@ -25,29 +28,25 @@ class Browser:
         # my_firefox_options.add_argument("--pdfjs.disabled=true")
         # my_firefox_options.add_argument("--pdfjs.enabledCache.state=false")
         self.driver = webdriver.Firefox(options=my_firefox_options)
-    
+
     def login(self):
+        """Go to login URL and log in the url \n
+        *DOES NOT HANDLE REDIRECT*
+        """
+        self.driver.get(c.LOGIN_PAGE_URL)
         self.driver.find_element(By.ID, "username").send_keys(USERNAME)
         self.driver.find_element(By.ID, "password").send_keys(PASSWORD)
         # Logic Button
-        self.driver.find_element(By.XPATH, "/html/body/div/div[2]/div/div[1]/form/input[5]").click()
+        self.driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div[1]/form/input[4]").click()
 
         sleep(2)
-        if "https://md.hit.ac.il/" == self.driver.title:
+        if self.driver.current_url != c.LOGIN_PAGE_URL:
             print("Logged in")
         else:
-            print("Please log in")
-            # self.driver.close()
-            sys.exit()
+            print("login failed")
+            self.driver.close()
+            raise Exception("Login failed")
 
-    def refresh_page(self):
-        self.driver.refresh()
-        self.driver.switch_to.alert.accept() # dismisses the alert of a refresh in login page
-        sleep(2)
-        if "https://is.hit.ac.il" in self.driver.current_url:
-            print("need to login")
-            self.login()
-    
     def get_content(self):
         #find out what it locates
         foler_name = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/section[2]/aside/section[1]/div/div/div[1]/div[1]/a").text    
@@ -55,7 +54,5 @@ class Browser:
         
 if __name__ =='__main__':
     bw = Browser();
-    bw.driver.get("https://md.hit.ac.il/")
-
-    if "https://md.hit.ac.il/" != bw.driver.title:
-        bw.login()
+    bw.login()
+    bw.driver.get(c.HOME_PAGE_URL)
