@@ -1,48 +1,52 @@
-# Todo
+# Storage Class (need to work with hebrew)
 
-### Add filter base url:
+[ ] `list_all_files` - Retrieve all file names in folder (helper)
 
-[ ] url : link
+[ ] `file_exist` - Compare files by `name` before downloading
 
-[ ] folder: folder
+[ ] `create_new_folder` - new folder in given path
 
-[ ] resource : word,pdf,excel.... \*\*asm
-make sure to check if the file actually download (supported files)
+[ ] `move_file` - move file to new location
 
-[ ] quiz : \*ignore
+[ ] optional: hash data map - if there is a need to speed up
 
-[ ] ass : assignment \*ignore
+[ ] current location : `Linked List` - (pop and add)
 
-### Manage folders:
+[ ] `list_to_path` - turn linked list to full os path
+</br></br>
 
-[ ] extract folder names
+# Scraper Class
 
-[ ] keep current location
+[ ] `update_relative_path` - pop out or go in next | check for unnamed section
 
-[ ] save file to the proper location - if the file already exist it duplicate it with (number)
+[ ] `url_handler` - detect file type and choose action (compare file name) | check for unhandled types
 
-[ ] file compare? check if there are changes if the file
+[ ] `new_file_added` - alert and add to OneNote
 
-[ ] nickname a folder - save a folder in a different name
+[ ] Download indication - done\failed
 
-[ ] semester grouping
+[ ] Traverse the site in a systematic algorithm
 
-### Download mechanism:
+[ ] Think about ways for filter content (section or folders)
 
-[x] download pdf
+</br></br>
 
-[x] download word
+# Telegram bot
 
-[x] download excel
+[ ] `new_file` - file name, course, (link?)
 
-### Misc
+[ ] `error` - unhandled error that requires my attention
 
-[ ] implement better way to save login info
+[ ] optional - que system to send notification/s only when finished scrapping
 
-[ ] add more debug notes to terminal
+</br></br>
 
-### OneDrive integration
+# OneNote
 
-### Telegram bot
+[ ] add new file in the correct notebook and section ( create) through PowerAutomate | check details later
 
-### Dockerize the project
+</br></br>
+
+## Down the line
+
+[ ] Dockerize the project
