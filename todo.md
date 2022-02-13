@@ -1,18 +1,18 @@
-# Storage Class (need to work with hebrew)
+# Storage Class (need to work with hebrew | both database and OS storage)
 
--   [ ] `list_all_files` - Retrieve all file names in folder (helper)
+-   [ ] `is_existing` - Check in database if url and file name exist (same record)
 
--   [ ] `file_exist` - Compare files by `name` before downloading
+-   [ ] `add_new_record` - add new file to database
 
 -   [ ] `create_new_folder` - new folder in given path
 
 -   [ ] `move_file` - move file to new location
 
--   [ ] optional: hash data map - if there is a need to speed up
-
 -   [ ] current location : `Linked List` - (pop and add)
 
--   [ ] `list_to_path` - turn linked list to full os path
+-   [ ] handle errors in database
+
+-   [ ] `list_to_path` - turn linked list to full os path / or relative path
         </br></br>
 
 # Scraper Class
