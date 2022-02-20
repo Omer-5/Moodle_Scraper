@@ -142,3 +142,7 @@ pyproject.toml
 myToken.py
 secrets.py
 geckodriver.log
+
+ignore_folder/
+.vscode/
+settings.json

@@ -21,6 +21,8 @@ class Browser:
         # Network -> Content-Type
         my_firefox_options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/plain; charset=utf-8; text/csv;application/json;charset=utf-8;application/pdf;text/plain;application/text;text/xml;application/xml;application/msword;text/html")
         my_firefox_options.set_preference("pdfjs.disabled", True)
+        my_firefox_options.set_preference("intl.accept_languages", "locale-of-choice")
+
         # my_firefox_options.set_preference()("browser.download.dir","/home/omer/Downloads")
         # my_firefox_options.add_argument("-private")
         # my_firefox_options.add_argument("--headless")
@@ -37,7 +39,7 @@ class Browser:
         self.driver.find_element(By.ID, "username").send_keys(USERNAME)
         self.driver.find_element(By.ID, "password").send_keys(PASSWORD)
         # Logic Button
-        self.driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div[1]/form/input[4]").click()
+        self.driver.find_element(By.XPATH, c.LOGIN_BUTTON).click()
 
         sleep(2)
         if self.driver.current_url != c.LOGIN_PAGE_URL:
@@ -47,12 +49,58 @@ class Browser:
             self.driver.close()
             raise Exception("Login failed")
 
-    def get_content(self):
-        #find out what it locates
-        foler_name = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/section[2]/aside/section[1]/div/div/div[1]/div[1]/a").text    
+    def course_dispatcher(self):
+        """ Scan the page for all the relevant courses and send them to be parsed
+            assume logged in and redirected to home page
+        """
+        all_courses_div = self.driver.find_element(By.XPATH, c.ALL_COURSES_DIV)
+        courses = all_courses_div.find_elements(By.TAG_NAME,"li")
+
+        for course in courses:
+            if(course.text != ""):
+                course_name = course.text.replace("קורס","")
+                course_url = course.find_element(By.TAG_NAME,"a").get_attribute('href')
+                # send to strage class - check if table exist and switch to it
+                self.course_extractor(course_name,course_url)
+            break # remove after testing
+        self.driver.close()
+
+    def course_extractor(self, course_name, course_url):
+        """ extracting all crouse content
+
+        Args:
+            course_name (string): hebrew course name
+            course_url (string): course url
+        """
+        self.driver.get(course_url)
+
+        sections = self.driver.find_elements(By.CLASS_NAME,c.DIV_SECTION_CLASS)
+
+        for section in sections:
+            section_extractor(self, section)
+
+
+    def section_extractor(self, section):
+        section_name = section.find_element(By.TAG_NAME,"h3").text
+        
+        section_ul = section.find_elements(By.CLASS_NAME, c.UL_CLASS_NAME)
+        if len(section_ul) > 0:
+            sections_li = section_ul[0].find_elements(By.CLASS_NAME, c.LI_CLASS_NAME)
+
+            for li in sections_li:
+                file_link_url_raw = li.find_elements(By.CLASS_NAME,c.FILE_LINK_CLASS_NAME)
+                if len(file_link_url_raw) > 0:
+                    file_link_url = file_link_url_raw[0].get_attribute('href')
+                    text_to_remove = li.find_element(By.CLASS_NAME,c.FILE_NAME_CHILD_TO_REMOVE_CLASS_NAME).text
+                    file_moodle_name = li.find_element(By.CLASS_NAME,c.FILE_NAME_CLASS_NAME).text.replace(text_to_remove,"")
+
+                    url_handler(self,file_link_url,file_moodle_name)
+    
+    def url_handler(self,url,file_name):
+        # add logic 
 
         
 if __name__ =='__main__':
     bw = Browser();
     bw.login()
-    bw.driver.get(c.HOME_PAGE_URL)
+    bw.course_dispatcher()
