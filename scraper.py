@@ -60,7 +60,7 @@ class Browser:
             if(course.text != ""):
                 course_name = course.text.replace("קורס","")
                 course_url = course.find_element(By.TAG_NAME,"a").get_attribute('href')
-                # send to strage class - check if table exist and switch to it
+                # send to storage class - check if table exist and switch to it
                 self.course_extractor(course_name,course_url)
             break # remove after testing
         self.driver.close()
@@ -80,11 +80,13 @@ class Browser:
             section_extractor(self, section)
 
 
+
     def section_extractor(self, section):
         section_name = section.find_element(By.TAG_NAME,"h3").text
         
         section_ul = section.find_elements(By.CLASS_NAME, c.UL_CLASS_NAME)
         if len(section_ul) > 0:
+            #send to storage - check if folder exists
             sections_li = section_ul[0].find_elements(By.CLASS_NAME, c.LI_CLASS_NAME)
 
             for li in sections_li:
