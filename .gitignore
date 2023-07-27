@@ -23,6 +23,7 @@ wheels/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
+settings.cfg
 *.egg
 MANIFEST
 
@@ -146,4 +147,6 @@ geckodriver.log
 ignore_folder/
 .vscode/
 settings.json
+config.py
 *.db
+/bin

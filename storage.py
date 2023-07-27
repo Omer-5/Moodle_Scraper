@@ -13,10 +13,10 @@ class Storage():
     """
     def __init__(self) -> None:
         self.course_name = ""
-        self.section_name = ""
+        self.section_name = ", "
 
         try:
-            self.conn = sqlite3.connect('HIT_current_database.db')
+            self.conn = sqlite3.connect('CURRENT_DATABASE_CAREFULL.db')
             self.cursor = self.conn.cursor()
 
             self.cursor.execute("""
@@ -36,12 +36,19 @@ class Storage():
             raise
         self.os_path = "" # import from config file later \ other class
 
-    def _add_new_entry(self, entry_name, url, extra_details) -> None:
-        """ add new record the database
+    def new_file_handler(self, entry_name, url, extra_details=""):
+        """ Handles Database and local files
         """
-
-        date = self._get_date()
         entry_name = self._remove_problematic_chars(entry_name)
+
+        # Send to other class to handle local files
+
+        # IMPORTANT: Adding to DB is the last thing
+        self._add_new_entry(entry_name, url, extra_details)
+
+    def _add_new_entry(self, entry_name, url, extra_details) -> None:
+        """ IMPORTANT: INSERTING *WITHOUT*! CHECKING """
+        date = self._get_date()
 
         try:
             self.cursor.execute("INSERT INTO main VALUES (?, ?, ?, ?, ?, ?)", (
@@ -55,10 +62,10 @@ class Storage():
             self.conn.commit()
         except Exception as error:
             print(f"""
-                ***** Failed adding new row to database
-                {self.course_name=}, {self.section_name=} \n
-                {entry_name=}, {extra_details=} \n
-                {url=}, {date=} \n
+                ***** Failed adding to the database
+                {self.course_name=}, {self.section_name=}, {entry_name=}\n
+                {url=} | {date=}\n
+                {extra_details=}\n\n
                 {error=}
             """)
             raise
@@ -81,7 +88,6 @@ class Storage():
             raw_course_name (string): the raw course name
         """
         self.course_name = self._remove_problematic_chars(raw_course_name)
-        # handle folder
 
     def change_section(self, new_section) -> None:
         """ change context to new section, create folder if necessary
@@ -90,7 +96,6 @@ class Storage():
             new_section (string): new section name
         """
         self.section_name = self._remove_problematic_chars(new_section)
-        # handle Folder
 
     def is_new_item(self, entry_name, url) -> bool:
         """check if the file already exist, but doesn't add it
@@ -103,12 +108,16 @@ class Storage():
             bool: True if new, False if old
         """
         try:
+            entry_name = self._remove_problematic_chars(entry_name)
             temp_cursor = self.cursor.execute(
                 "SELECT * FROM main WHERE url=:url AND file_name=:entry_name", {
                 'entry_name': entry_name,
                 'url': url,
             })
+
             list_result = temp_cursor.fetchall()
+            if len(list_result) == 0:
+                return True
         except Exception as error:
             print(f"""
                 Failed to check if {entry_name} with URL: {url} exist in the database
@@ -116,21 +125,28 @@ class Storage():
                 {error=}
             """)
             raise
-        return True if len(list_result) == 0 else False
+        return False
 
     def add_if_summary_is_new(self, summary) -> None:
-        """check if the summary already exist
+        """add a summary if it doesn't exist
         Args:
             summary (string): summary
-        Returns:
-            bool: True if add, False if already in database
         """
+        summary = self._remove_problematic_chars(summary)
         try:
             temp_cursor = self.cursor.execute(
                 "SELECT * FROM main WHERE extra_details=:summary AND file_name='summary'", {
                 'summary': summary
             })
+
             list_result = temp_cursor.fetchall()
+            if len(list_result) == 0:
+                self._add_new_entry("summary", "", summary)
+                # print(f"""
+                #     **** new summary, \n
+                #     {self.course_name=}, \n
+                #     {summary=}
+                # """)
         except Exception as error:
             print(f"""
                 Failed to check if {summary=} exist in the database
@@ -139,13 +155,6 @@ class Storage():
             """)
             raise
 
-        if len(list_result) == 0:
-            self._add_new_entry("summary", "", summary)
-            print(f"""
-                **** new summary,
-                {self.course_name=},
-                {summary=}
-            """)
 
     @staticmethod
     def _remove_problematic_chars(raw_name) -> string:
@@ -154,7 +163,10 @@ class Storage():
         Args:
             raw_name (string): raw name
         """
-        return str.strip(raw_name.replace("'","").replace('"',"").replace('\n',""))
+        blacklist = ("'", '"', "\n", "*", "%")
+        for item in blacklist:
+            raw_name = raw_name.replace(item, "")
+        return str.strip(raw_name)
 
     def close_connection(self) -> None:
         """ Close connection to database

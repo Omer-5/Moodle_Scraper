@@ -14,8 +14,9 @@ second_semester = [
 
 ]
 
-# COURSES_TO_SCAN = first_semester + second_semester
+COURSES_TO_SCAN = first_semester + second_semester
 # COURSES_TO_SCAN= ["מבוא למדעי המחשב"]
-COURSES_TO_SCAN= ["מבני נתונים"]
+# COURSES_TO_SCAN= ["מבני נתונים"]
+
 
 DOWNLOAD_PATH= []

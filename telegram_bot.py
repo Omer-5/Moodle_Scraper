@@ -1,32 +1,32 @@
-from email.message import Message
+from time import sleep
 import telebot
 from telebot import util
 from secrets import TELEGRAM_TOKEN, CHAT_ID
+
+SLEEP_DURATION = 1 # In Seconds
 
 class Telegram_Bot:
     def __init__(self) -> None:
         TOKEN = TELEGRAM_TOKEN
         self.tb = telebot.TeleBot(TOKEN)	#create a new Telegram Bot object
-
-        # Upon calling this function, TeleBot starts polling the Telegram servers for new messages.
-        # - interval: int (default 0) - The interval between polling requests
-        # - timeout: integer (default 20) - Timeout in seconds for long polling.
-        # - allowed_updates: List of Strings (default None) - List of update types to request 
-        # self.tb.infinity_polling(interval=0, timeout=20)
-
+        self.updates = self.tb.get_updates(1234,100,20) #get_Updates(offset, limit, timeout):
         # getMe
-        self.user = self.tb.get_me()
+        # self.user = self.tb.get_me()
 
         # # getUpdates
         # updates = tb.get_updates()
         # # or
-        self.updates = self.tb.get_updates(1234,100,20) #get_Updates(offset, limit, timeout):
 
     def send_message(self, message):
         # sendMessage
         self.tb.send_message(CHAT_ID, message)
         # self.tb.me
 
+    def announce_start(self):
+        self.tb.send_message(CHAT_ID, "מתחיל בסריקה!")
+        self.tb.send_chat_action(CHAT_ID, 'typing')
+
+    # @self.rate_limitter
     def new_file(self, course, section, file_name, url):
         # msg = util.types.MessageEntity(util.types.MessageEntity,util.l) 
                 # message = f"""
@@ -35,14 +35,21 @@ class Telegram_Bot:
         #     File Name = {file_name} \n
         #     Download Link = {url}
         # """
-        message = f"""\n
-            **קורס** = {course}\n
-            **נושא** = {section}\n
-            **שם הקובץ** = {file_name}\n
-            **לינק** = {url}
+        message = f"""
+            קורס = {course}\n
+            נושא = {section}\n
+            שם הקובץ = {file_name}\n
+            לינק = {url}
         """
         self.tb.send_message(CHAT_ID, message)
 
+    def rate_limitter(self, func):
+        """ Decorator for sleeping """
+        def wrapper():
+            print(f"Sleeping {SLEEP_DURATION} Seconds")
+            sleep(SLEEP_DURATION)
+            # func()
+        return wrapper
 
 ############################
     # # setWebhook
