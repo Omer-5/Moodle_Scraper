@@ -19,7 +19,9 @@ class Browser:
     def __init__(self) -> None:
         """initialize the browser basic config options to download
         """
-        my_firefox_options = FirefoxOptions()
+        my_firefox_options = webdriver.FirefoxOptions()
+
+        # my_firefox_options = FirefoxOptions()
         my_firefox_options.set_preference("browser.download.folderList", 1)
         # Network -> Content-Type
         my_firefox_options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/plain; charset=utf-8; text/csv;application/json;charset=utf-8;application/pdf;text/plain;application/text;text/xml;application/xml;application/msword;text/html")
@@ -32,8 +34,14 @@ class Browser:
         # my_firefox_options.add_argument("--browser.helperApps.neverAsk.saveToDisk=application/octet-stream")
         # my_firefox_options.add_argument("--pdfjs.disabled=true")
         # my_firefox_options.add_argument("--pdfjs.enabledCache.state=false")
-        self.driver = webdriver.Firefox(options=my_firefox_options)
 
+        # self.driver = webdriver.Firefox(options=my_firefox_options)
+
+        self.driver = webdriver.Remote(
+            command_executor='http://localhost:4444/wd/hub',
+            # command_executor='http://localhost:4444/session',
+            options=my_firefox_options
+        )
         self.storage = Storage()
 
     def login(self):
