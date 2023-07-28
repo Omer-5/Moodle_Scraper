@@ -191,7 +191,6 @@ class Browser:
         """
         # telegram bot, powerautomate
         self.storage.close_connection()
-        # self.driver.close()
         self.driver.quit()
 
 

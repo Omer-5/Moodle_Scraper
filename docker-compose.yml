@@ -1,0 +1,12 @@
+# ** ARM ** $ docker run -d -p 4444:4444 -p 7900:7900 --shm-size="4g" selenium/standalone-firefox:latest
+# ** https://github.com/seleniumhq-community/docker-seleniarm
+
+version: "3" 
+
+services:
+  selenium-standalone:
+    image: selenium/standalone-firefox:latest
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+    shm_size: "4g"
