@@ -191,7 +191,8 @@ class Browser:
         """
         # telegram bot, powerautomate
         self.storage.close_connection()
-        self.driver.close()
+        # self.driver.close()
+        self.driver.quit()
 
 
 
@@ -199,4 +200,8 @@ class Browser:
 if __name__ =='__main__':
     bw = Browser()
     bw.login()
-    bw.course_dispatcher()
+    try:
+        bw.course_dispatcher()
+    except:
+        print("Failed")
+        bw.close_all()
