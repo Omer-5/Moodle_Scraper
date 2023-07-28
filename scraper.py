@@ -1,12 +1,12 @@
-from ast import Not
-from sys import dont_write_bytecode
-import sys
-from typing import List
+# from ast import Not
+# from sys import dont_write_bytecode
+# import sys
+# from typing import List
 import string
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+# from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
+# from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 import config
 import constants as c
