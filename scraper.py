@@ -34,7 +34,14 @@ class Browser:
         # my_firefox_options.add_argument("--browser.helperApps.neverAsk.saveToDisk=application/octet-stream")
         # my_firefox_options.add_argument("--pdfjs.disabled=true")
         # my_firefox_options.add_argument("--pdfjs.enabledCache.state=false")
-        self.driver = webdriver.Firefox(options=my_firefox_options)
+
+        # self.driver = webdriver.Firefox(options=my_firefox_options)
+
+        self.driver = webdriver.Remote(
+            command_executor='http://localhost:4444/wd/hub',
+            # command_executor='http://localhost:4444/session',
+            options=my_firefox_options
+        )
         self.storage = Storage()
         # self.bot = bot()
         # self.bot.announce_start()
@@ -242,4 +249,8 @@ class Browser:
 if __name__ =='__main__':
     bw = Browser()
     bw.login()
-    bw.course_dispatcher()
+    try:
+        bw.course_dispatcher()
+    except:
+        print("Failed")
+        bw.close_all()
